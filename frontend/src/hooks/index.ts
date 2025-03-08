@@ -22,6 +22,17 @@ const blogCache = new Map<string, CacheItem<Blog>>();
 const blogsCache = new Map<string, CacheItem<Blog[]>>();
 const CACHE_DURATION = 5 * 60 * 1000; // 5 minutes
 
+// Helper function to ensure date is in ISO format
+const ensureValidDate = (date: any): string => {
+    if (!date) return new Date().toISOString();
+    try {
+        const parsed = new Date(date);
+        return isNaN(parsed.getTime()) ? new Date().toISOString() : parsed.toISOString();
+    } catch {
+        return new Date().toISOString();
+    }
+};
+
 export const useBlog = ({ id }: { id: string }) => {
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState<Error | null>(null);
@@ -39,11 +50,18 @@ export const useBlog = ({ id }: { id: string }) => {
                 signal
             });
             
-            const blogData = response.data.blog;
+            const rawBlog = response.data.blog;
+            const blogData: Blog = {
+                ...rawBlog,
+                publishedDate: ensureValidDate(rawBlog.publishedDate)
+            };
+            
+            // console.log('Fetched blog date:', blogData.publishedDate);
             blogCache.set(id, { data: blogData, timestamp: Date.now() });
             setBlog(blogData);
         } catch (err) {
             if (!axios.isCancel(err)) {
+                // console.error('Error fetching blog:', err);
                 setError(err as Error);
             }
         } finally {
@@ -91,11 +109,17 @@ export const useBlogs = () => {
                 signal
             });
             
-            const blogsData = response.data.blogs;
+            const blogsData: Blog[] = response.data.blogs.map((blog: any) => ({
+                ...blog,
+                publishedDate: ensureValidDate(blog.publishedDate)
+            }));
+
+            // console.log('Fetched blogs with dates:', blogsData.map(b => b.publishedDate));
             blogsCache.set('all', { data: blogsData, timestamp: Date.now() });
             setBlogs(blogsData);
         } catch (err) {
             if (!axios.isCancel(err)) {
+                // console.error('Error fetching blogs:', err);
                 setError(err as Error);
             }
         } finally {
