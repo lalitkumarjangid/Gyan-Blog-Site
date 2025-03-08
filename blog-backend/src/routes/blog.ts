@@ -54,12 +54,14 @@ blogRouter.post('/', async (c) => {
         data: {
             title: body.title,
             content: body.content,
-            authorId: Number(authorId)
+            authorId: Number(authorId),
+            publishedDate: new Date() // Add current date when creating blog
         }
     })
 
     return c.json({
-        id: blog.id
+        id: blog.id,
+        publishedDate: blog.publishedDate // Return publishedDate in response
     })
 })
 
@@ -102,6 +104,7 @@ blogRouter.get('/bulk', async (c) => {
             content: true,
             title: true,
             id: true,
+            publishedDate: true, // Add publishedDate to selection
             author: {
                 select: {
                     name: true
@@ -130,6 +133,7 @@ blogRouter.get('/:id', async (c) => {
                 id: true,
                 title: true,
                 content: true,
+                publishedDate: true, // Add publishedDate to selection
                 author: {
                     select: {
                         name: true
@@ -142,7 +146,7 @@ blogRouter.get('/:id', async (c) => {
             blog
         });
     } catch(e) {
-        c.status(411); // 4
+        c.status(411);
         return c.json({
             message: "Error while fetching blog post"
         });
