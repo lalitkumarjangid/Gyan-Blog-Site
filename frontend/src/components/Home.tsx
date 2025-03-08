@@ -1,39 +1,29 @@
-import { motion } from "framer-motion";
-
-import { AuroraBackground } from "./ui/aurora-background";
+import React from "react";
+import { Spotlight } from "./ui/spotlight-new";
+import { Button } from "./ui/button";
 import { Link } from "react-router-dom";
 
 export function Home() {
   return (
-    
-    <AuroraBackground className="bg-gray-900">
-      <motion.div
-        initial={{ opacity: 0.0, y: 40 }}
-        whileInView={{ opacity: 1, y: 0 }}
-        transition={{
-          delay: 0.3,
-          duration: 0.8,
-          ease: "easeInOut",
-        }}
-        className="relative flex flex-col gap-4 items-center justify-center px-4"
-      >
-        <div className="flex justify-center px-10 py-4 mt-[-5]">
-      <h3 className="font-bold text-3xl md:text-7xl mb-10 mt- font-serif text-white no-underline">Gyan</h3>
+    <div className="min-h-screen w-screen overflow-hidden flex flex-col items-center justify-center bg-black/[0.96] antialiased bg-grid-white/[0.02] relative px-4 sm:px-6 lg:px-8">
+      <Spotlight />
+      <div className="max-w-7xl mx-auto relative z-10 w-full py-12 sm:py-16 md:py-20 lg:py-24">
+        <div className="flex flex-col items-center space-y-6 sm:space-y-8">
+          <h1 className="text-3xl sm:text-4xl md:text-6xl lg:text-7xl font-bold text-center bg-clip-text text-transparent bg-gradient-to-b from-neutral-50 to-neutral-400 bg-opacity-50 px-4">
+            Welcome to Gyan <br className="md:hidden" /> Blog
+          </h1>
+          <p className="text-sm sm:text-base md:text-lg text-neutral-300 max-w-lg text-center mx-auto px-4">
+            Explore the world of technology through insightful articles,
+            tutorials, and the latest developments in software engineering.
+          </p>
+          <Button variant="default" size="lg">
+            <Link to="/signin">
+              Start Reading
+              <span className="ml-2">→</span>
+            </Link>
+          </Button>
+        </div>
+      </div>
     </div>
-        <div className="text-3xl md:text-7xl font-bold text-white text-center">
-        Code illuminates, bugs ignite: 
-        </div>
-        <div className="font-extralight text-base md:text-4xl text-neutral-200 py-4">
-        Developer insights.
-        </div>
-        <button className="relative inline-flex h-12 overflow-hidden rounded-full p-[1px] focus:outline-none focus:ring-2 focus:ring-slate-400 focus:ring-offset-2 focus:ring-offset-slate-50">
-  <span className="absolute inset-[-1000%] animate-[spin_2s_linear_infinite] bg-[conic-gradient(from_90deg_at_50%_50%,#E2CBFF_0%,#393BB2_50%,#E2CBFF_100%)]" />
-  <span className="inline-flex h-full w-full cursor-pointer items-center justify-center rounded-full bg-slate-950 px-3 py-1 text-sm font-medium text-white backdrop-blur-3xl">
-  <Link to="/Signin">Get Started</Link>
-  </span>
-</button>
-      </motion.div>
-    </AuroraBackground>
-   
   );
 }

@@ -24,46 +24,59 @@ export const Auth = ({ type }: { type: "signup" | "signin" }) => {
             toast.error(`Error while ${type === "signup" ? "signing up" : "signing in"}`);
         }
     }
-    
-    
-    return <div className="h-screen flex justify-center flex-col">
-        <div className="flex justify-center">
-            <div>
-                <div className="px-10">
-                    <div className="text-3xl font-extrabold">
-                        Create an account
-                    </div>
-                    <div className="text-slate-500">
-                        {type === "signin" ? "Don't have an account?" : "Already have an account?" }
-                        <Link className="pl-2 underline" to={type === "signin" ? "/signup" : "/signin"}>
+
+    return (
+        <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-slate-800 via-slate-900 to-slate-800 antialiased">
+            <div className="w-full max-w-md p-8 space-y-8 bg-slate-800/60 backdrop-blur-xl rounded-3xl border border-slate-700 shadow-2xl">
+                <div className="text-center space-y-3">
+                    <h2 className="text-4xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-slate-200 via-blue-200 to-slate-200 tracking-tight">
+                        {type === "signup" ? "Create Account" : "Welcome Back"}
+                    </h2>
+                    <p className="text-slate-400 font-medium">
+                        {type === "signin" ? "Don't have an account?" : "Already have an account?"}
+                        <Link 
+                            className="ml-2 text-blue-400 hover:text-blue-300 transition-colors font-semibold" 
+                            to={type === "signin" ? "/signup" : "/signin"}
+                        >
                             {type === "signin" ? "Sign up" : "Sign in"}
                         </Link>
-                    </div>
+                    </p>
                 </div>
-                <div className="pt-8">
-                    {type === "signup" ? <LabelledInput label="Name" placeholder="Lalit..." onChange={(e) => {
-                        setPostInputs({
-                            ...postInputs,
-                            name: e.target.value
-                        })
-                    }} /> : null}
-                    <LabelledInput label="Username" placeholder="Lalit@gmail.com" onChange={(e) => {
-                        setPostInputs({
-                            ...postInputs,
-                            username: e.target.value
-                        })
-                    }} />
-                    <LabelledInput label="Password" type={"password"} placeholder="123456" onChange={(e) => {
-                        setPostInputs({
-                            ...postInputs,
-                            password: e.target.value
-                        })
-                    }} />
-                    <button onClick={sendRequest} type="button" className="mt-8 w-full text-white bg-gray-800 hover:bg-gray-900 focus:outline-none focus:ring-4 focus:ring-gray-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-gray-800 dark:hover:bg-gray-700 dark:focus:ring-gray-700 dark:border-gray-700">{type === "signup" ? "Sign up" : "Sign in"}</button>
+
+                <div className="space-y-6">
+                    {type === "signup" && (
+                        <LabelledInput 
+                            label="Name" 
+                            placeholder="Enter your name" 
+                            onChange={(e) => setPostInputs({ ...postInputs, name: e.target.value })}
+                        />
+                    )}
+                    <LabelledInput 
+                        label="Email" 
+                        placeholder="you@example.com" 
+                        onChange={(e) => setPostInputs({ ...postInputs, username: e.target.value })}
+                        type="email"
+                    />
+                    <LabelledInput 
+                        label="Password" 
+                        type="password" 
+                        placeholder="••••••••" 
+                        onChange={(e) => setPostInputs({ ...postInputs, password: e.target.value })}
+                    />
+
+                    <button
+                        onClick={sendRequest}
+                        className="w-full relative inline-flex h-12 overflow-hidden rounded-xl p-[1px] focus:outline-none focus:ring-2 focus:ring-blue-400 focus:ring-offset-2 focus:ring-offset-slate-800 group hover:scale-[1.02] active:scale-[0.98] transition-all duration-200"
+                    >
+                        <span className="absolute inset-[-1000%] animate-[spin_2s_linear_infinite] bg-[conic-gradient(from_90deg_at_50%_50%,#3b82f6_0%,#60a5fa_50%,#3b82f6_100%)]" />
+                        <span className="inline-flex h-full w-full cursor-pointer items-center justify-center rounded-xl bg-slate-900 px-4 py-1 text-base font-medium text-white backdrop-blur-3xl transition-all group-hover:bg-slate-800">
+                            {type === "signup" ? "Create Account" : "Sign In"}
+                        </span>
+                    </button>
                 </div>
             </div>
         </div>
-    </div>
+    );
 }
 
 interface LabelledInputType {
@@ -74,8 +87,20 @@ interface LabelledInputType {
 }
 
 function LabelledInput({ label, placeholder, onChange, type }: LabelledInputType) {
-    return <div>
-        <label className="block mb-2 text-sm text-black font-semibold pt-4">{label}</label>
-        <input onChange={onChange} type={type || "text"} id="first_name" className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5" placeholder={placeholder} required />
-    </div>
+    return (
+        <div className="space-y-2">
+            <label className="block text-sm font-medium text-slate-300">
+                {label}
+            </label>
+            <input
+                onChange={onChange}
+                type={type || "text"}
+                className="w-full px-4 py-3 rounded-xl bg-slate-900/50 border border-slate-700 text-white 
+                placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-blue-400/50 focus:border-blue-400/50
+                transition-all duration-200 hover:bg-slate-900/70"
+                placeholder={placeholder}
+                required
+            />
+        </div>
+    );
 }
