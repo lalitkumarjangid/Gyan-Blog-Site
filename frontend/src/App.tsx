@@ -1,10 +1,11 @@
+
 import { BrowserRouter, Route, Routes } from "react-router-dom";
 import { Signup } from "./pages/Signup";
 import { Signin } from "./pages/Signin";
 import { Blog } from "./pages/Blog";
 import { Blogs } from "./pages/Blogs";
 import { Publish } from "./pages/Publish";
-import { ToastContainer } from "react-toastify";
+import { Toaster } from 'react-hot-toast';
 
 import "./App.css"
 import { Home } from "./components/Home";
@@ -12,7 +13,17 @@ import { Home } from "./components/Home";
 function App() {
   return (
     <>
-    
+      <Toaster
+        position="top-center"
+        reverseOrder={false}
+        toastOptions={{
+          duration: 3000,
+          style: {
+            background: '#363636',
+            color: '#fff',
+          },
+        }}
+      />
       <BrowserRouter>
         <Routes>
           <Route path="/signup" element={<Signup />} />
@@ -23,7 +34,6 @@ function App() {
           <Route path="/" element={<Home/>} />
         </Routes>
       </BrowserRouter>
-      <ToastContainer />
     </>
   );
 }
