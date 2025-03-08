@@ -1,4 +1,4 @@
-import React from "react";
+
 import { Spotlight } from "./ui/spotlight-new";
 import { Button } from "./ui/button";
 import { Link } from "react-router-dom";
