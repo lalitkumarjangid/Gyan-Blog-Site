@@ -3,8 +3,7 @@ import { Link, useNavigate } from "react-router-dom";
 import { SignupInput } from "@lalitdev/blog-zodauth";
 import axios from "axios";
 import { BACKEND_URL } from "../config";
-import { toast } from 'react-toastify';
-import 'react-toastify/dist/ReactToastify.css';
+import toast from 'react-hot-toast';
 
 export const Auth = ({ type }: { type: "signup" | "signin" }) => {
     const navigate = useNavigate();
@@ -19,12 +18,13 @@ export const Auth = ({ type }: { type: "signup" | "signin" }) => {
             const response = await axios.post(`${BACKEND_URL}/api/v1/user/${type === "signup" ? "signup" : "signin"}`, postInputs);
             const jwt = response.data;
             localStorage.setItem("token", jwt);
+            toast.success(`Successfully ${type === "signup" ? "signed up" : "signed in"}!`);
             navigate("/blogs");
         } catch(e) {
-            toast.error("Error while signing up");
-            // notify the user here that the request failed
+            toast.error(`Error while ${type === "signup" ? "signing up" : "signing in"}`);
         }
     }
+    
     
     return <div className="h-screen flex justify-center flex-col">
         <div className="flex justify-center">
