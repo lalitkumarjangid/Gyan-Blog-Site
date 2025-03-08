@@ -9,7 +9,7 @@ export const Blogs = () => {
     if (loading) {
         return <div>
             <Appbar /> 
-            <div  className="flex justify-center">
+            <div className="flex justify-center">
                 <div>
                     <BlogSkeleton />
                     <BlogSkeleton />
@@ -23,14 +23,15 @@ export const Blogs = () => {
 
     return <div>
         <Appbar />
-        <div  className="flex justify-center">
+        <div className="flex justify-center">
             <div>
                 {blogs.map(blog => <BlogCard
+                    key={blog.id}
                     id={blog.id}
-                    authorName={blog.author.name || "Anonymous"}
+                    authorName={blog.author?.name || "Anonymous"}
                     title={blog.title}
                     content={blog.content}
-                    publishedDate={new Date().toLocaleDateString()}
+                    publishedDate={new Date(blog.publishedDate).toLocaleDateString()}
                 />)}
             </div>
         </div>
