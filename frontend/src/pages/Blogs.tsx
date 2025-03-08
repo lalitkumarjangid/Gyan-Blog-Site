@@ -21,11 +21,16 @@ export const Blogs = () => {
         </div>
     }
 
+    // Sort blogs by publishedDate in descending order (newest first)
+    const sortedBlogs = [...blogs].sort((a, b) => 
+        new Date(b.publishedDate).getTime() - new Date(a.publishedDate).getTime()
+    );
+
     return <div>
         <Appbar />
         <div className="flex justify-center">
             <div>
-                {blogs.map(blog => <BlogCard
+                {sortedBlogs.map(blog => <BlogCard
                     key={blog.id}
                     id={blog.id}
                     authorName={blog.author?.name || "Anonymous"}
