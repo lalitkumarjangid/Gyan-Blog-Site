@@ -1,6 +1,6 @@
 import { Appbar } from "../components/Appbar"
 import { BlogCard } from "../components/BlogCard"
-import { BlogSkeleton } from "../components/BlogSkeleton";
+import { BlogSkeleton } from "../components/BlogSkeleton";;
 import { useBlogs } from "../hooks";
 const formatDate = (dateString: string) => {
     try {
@@ -31,14 +31,15 @@ const formatDate = (dateString: string) => {
 export const Blogs = () => {
     const { loading, blogs } = useBlogs();
 
+  
     if (loading) {
         return (
-            <div className="min-h-screen bg-gray-50">
+            <div className="min-h-screen bg-gradient-to-b from-gray-50 to-white">
                 <Appbar />
                 <div className="max-w-4xl mx-auto px-4 py-8 sm:px-6 lg:px-8">
-                    <div className="space-y-8">
-                        {[...Array(5)].map((_, i) => (
-                            <BlogSkeleton key={i} />
+                    <div className="space-y-6">
+                        {[...Array(3)].map((_, index) => (
+                            <BlogSkeleton key={index} />
                         ))}
                     </div>
                 </div>

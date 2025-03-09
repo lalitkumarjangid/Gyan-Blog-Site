@@ -1,9 +1,21 @@
-
 import { Spotlight } from "./ui/spotlight-new";
 import { Button } from "./ui/button";
-import { Link } from "react-router-dom";
+
+import { useState } from "react";
 
 export function Home() {
+  const token = localStorage.getItem("token");
+  const navigateTo = token ? "/blogs" : "/signin";
+  const [isLoading, setIsLoading] = useState(false);
+
+  const handleClick = () => {
+    setIsLoading(true);
+
+    setTimeout(() => {
+      window.location.href = navigateTo;
+    }, 100);
+  };
+
   return (
     <div className="min-h-screen w-screen overflow-hidden flex flex-col items-center justify-center bg-black/[0.96] antialiased bg-grid-white/[0.02] relative px-4 sm:px-6 lg:px-8">
       <Spotlight />
@@ -16,11 +28,23 @@ export function Home() {
             Explore the world of technology through insightful articles,
             tutorials, and the latest developments in software engineering.
           </p>
-          <Button variant="default" size="lg">
-            <Link to="/signin">
-              Start Reading
-              <span className="ml-2">→</span>
-            </Link>
+          <Button
+            variant="default"
+            size="lg"
+            onClick={handleClick}
+            disabled={isLoading}
+          >
+            {isLoading ? (
+              <div className="flex items-center gap-2">
+                <div className="h-4 w-4 animate-spin rounded-full border-2 border-white border-t-transparent" />
+                Loading...
+              </div>
+            ) : (
+              <>
+                Start Reading
+                <span className="ml-2">→</span>
+              </>
+            )}
           </Button>
         </div>
       </div>
