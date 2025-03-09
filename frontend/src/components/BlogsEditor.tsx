@@ -6,62 +6,63 @@ import { RichTextEditor } from "../components/RichTextEditor";
 import React from "react";
 
 interface BlogEditorProps {
-    value: string;
-    onChange: (value: string) => void;
-    editorType?: "markdown" | "rich-text";
+  value: string;
+  onChange: (value: string) => void;
+  editorType?: "markdown" | "rich-text";
 }
 
 const turndownService = new TurndownService({
-    headingStyle: "atx",
-    codeBlockStyle: "fenced",
-    emDelimiter: "*"
+  headingStyle: "atx",
+  codeBlockStyle: "fenced",
+  emDelimiter: "*",
 });
 
-const BlogEditor: React.FC<BlogEditorProps> = ({ value, onChange, editorType = "markdown" }) => {
-    const [currentEditorType, setCurrentEditorType] = useState(editorType);
-    
-    const handleEditorSwitch = () => {
-        if (currentEditorType === "rich-text") {
-            // Convert HTML to Markdown
-            const markdown = turndownService.turndown(value);
-            onChange(markdown);
-            setCurrentEditorType("markdown");
-        } else {
-            setCurrentEditorType("rich-text");
-        }
-    };
+const BlogEditor: React.FC<BlogEditorProps> = ({
+  value,
+  onChange,
+  editorType = "markdown",
+}) => {
+  const [currentEditorType, setCurrentEditorType] = useState(editorType);
 
-    return (
-        <div className="w-full">
-            <div className="flex justify-end mb-2">
-                {/* Want to enable in Future */}
-                <button
-                    onClick={handleEditorSwitch}
-                    className="px-0 py-0 text-sm text-white-600 border border-white-600 rounded-md hover:bg-blue-50"
-                >
-                    {/* Switch to {currentEditorType === "markdown" ? "Rich Text" : "Markdown"} Editor */}
-                </button>
-            </div>
+  const handleEditorSwitch = () => {
+    if (currentEditorType === "rich-text") {
+      // Convert HTML to Markdown
+      const markdown = turndownService.turndown(value);
+      onChange(markdown);
+      setCurrentEditorType("markdown");
+    } else {
+      setCurrentEditorType("rich-text");
+    }
+  };
 
-            {currentEditorType === "markdown" ? (
-                <div data-color-mode="light">
-                    <MDEditor
-                        value={value}
-                        onChange={(val) => onChange(val || "")}
-                        height={500}
-                        previewOptions={{
-                            rehypePlugins: [[rehypeSanitize]]
-                        }}
-                    />
-                </div>
-            ) : (
-                <RichTextEditor 
-                    value={value}
-                    onChange={onChange}
-                />
-            )}
+  return (
+    <div className="w-full">
+      <div className="flex justify-end mb-2">
+        {/* Want to enable in Future */}
+        <button
+          onClick={handleEditorSwitch}
+          className="px-0 py-0 text-sm text-white-600 border border-white-600 rounded-md hover:bg-blue-50"
+        >
+          {/* Switch to {currentEditorType === "markdown" ? "Rich Text" : "Markdown"} Editor */}
+        </button>
+      </div>
+
+      {currentEditorType === "markdown" ? (
+        <div data-color-mode="light">
+          <MDEditor
+            value={value}
+            onChange={(val) => onChange(val || "")}
+            height={500}
+            previewOptions={{
+              rehypePlugins: [[rehypeSanitize]],
+            }}
+          />
         </div>
-    );
+      ) : (
+        <RichTextEditor value={value} onChange={onChange} />
+      )}
+    </div>
+  );
 };
 
 export default BlogEditor; // Ensure default export
