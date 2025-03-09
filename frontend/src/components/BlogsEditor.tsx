@@ -37,7 +37,7 @@ const BlogEditor: React.FC<BlogEditorProps> = ({ value, onChange, editorType = "
                 {/* Want to enable in Future */}
                 <button
                     onClick={handleEditorSwitch}
-                    className="px-4 py-2 text-sm text-blue-600 border border-blue-600 rounded-md hover:bg-blue-50"
+                    className="px-0 py-0 text-sm text-white-600 border border-white-600 rounded-md hover:bg-blue-50"
                 >
                     {/* Switch to {currentEditorType === "markdown" ? "Rich Text" : "Markdown"} Editor */}
                 </button>
