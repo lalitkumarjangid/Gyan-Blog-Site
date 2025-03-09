@@ -35,12 +35,12 @@ const BlogEditor: React.FC<BlogEditorProps> = ({ value, onChange, editorType = "
         <div className="w-full">
             <div className="flex justify-end mb-2">
                 {/* Want to enable in Future */}
-                {/* <button
+                <button
                     onClick={handleEditorSwitch}
                     className="px-4 py-2 text-sm text-blue-600 border border-blue-600 rounded-md hover:bg-blue-50"
                 >
-                    Switch to {currentEditorType === "markdown" ? "Rich Text" : "Markdown"} Editor
-                </button> */}
+                    {/* Switch to {currentEditorType === "markdown" ? "Rich Text" : "Markdown"} Editor */}
+                </button>
             </div>
 
             {currentEditorType === "markdown" ? (
