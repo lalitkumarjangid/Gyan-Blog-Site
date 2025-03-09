@@ -2,6 +2,31 @@ import { Appbar } from "../components/Appbar"
 import { BlogCard } from "../components/BlogCard"
 import { BlogSkeleton } from "../components/BlogSkeleton";
 import { useBlogs } from "../hooks";
+const formatDate = (dateString: string) => {
+    try {
+        const date = new Date(dateString);
+        if (isNaN(date.getTime())) {
+            return 'Recently';
+        }
+
+        // Create a date formatter with explicit timezone to ensure consistent display
+        const formatter = new Intl.DateTimeFormat('en-IN', {
+            year: 'numeric',
+            month: 'long',
+            day: 'numeric',
+            timeZone: 'Asia/Kolkata',
+            hour12: false, // Ensure 24-hour format
+            hour: undefined, // Don't show time
+            minute: undefined,
+            second: undefined
+        });
+
+        return formatter.format(date);
+    } catch (error) {
+        console.error('Date formatting error:', error);
+        return 'Recently';
+    }
+};
 
 export const Blogs = () => {
     const { loading, blogs } = useBlogs();
@@ -47,7 +72,7 @@ export const Blogs = () => {
                                 authorName={blog.author?.name || "Anonymous"}
                                 title={blog.title}
                                 content={blog.content}
-                                publishedDate={new Date(blog.publishedDate).toLocaleDateString()}
+                                publishedDate={formatDate(blog.publishedDate)}
                             />
                         ))}
                     </div>

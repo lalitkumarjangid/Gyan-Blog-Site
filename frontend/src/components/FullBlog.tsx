@@ -17,14 +17,17 @@ export const FullBlog = ({ blog }: { blog: Blog }) => {
         return 'Just now';
       }
 
-      const istDate = new Date(date.getTime() + (5.5 * 60 * 60 * 1000));
-      return new Intl.DateTimeFormat('en-US', {
+      // Use proper timezone handling
+      return new Intl.DateTimeFormat('en-IN', {
         year: 'numeric',
         month: 'long',
         day: 'numeric',
-        timeZone: 'Asia/Kolkata'
-      }).format(istDate);
+        timeZone: 'Asia/Kolkata',
+        hour12: true
+      }).format(date);
+
     } catch (error) {
+      // console.error('Date formatting error:', error);
       return 'Just now';
     }
   };
