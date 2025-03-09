@@ -4,11 +4,13 @@ import { BACKEND_URL } from "../config";
 import { useNavigate } from "react-router-dom";
 import { useState } from "react";
 import toast from "react-hot-toast";
-import RichTextEditor from "../components/RichTextEditor";
+import BlogEditor from "../components/BlogsEditor";
+
+
 
 export const Publish = () => {
     const [title, setTitle] = useState("");
-    const [description, setDescription] = useState(""); // Stores HTML content
+    const [content, setContent] = useState("");
     const navigate = useNavigate();
 
     const handlePublish = async () => {
@@ -17,7 +19,7 @@ export const Publish = () => {
             return;
         }
 
-        if (!description.trim()) {
+        if (!content.trim()) {
             toast.error("Please write some content");
             return;
         }
@@ -32,7 +34,11 @@ export const Publish = () => {
 
             const response = await axios.post(
                 `${BACKEND_URL}/api/v1/blog`,
-                { title, content: description },
+                { 
+                    title, 
+                    content,
+                    contentType: 'markdown'
+                },
                 { headers: { Authorization: token } }
             );
 
@@ -58,7 +64,7 @@ export const Publish = () => {
         <div className="min-h-screen bg-gray-100">
             <Appbar />
             <div className="flex justify-center py-12">
-                <div className="w-full max-w-2xl bg-white shadow-lg rounded-lg p-6">
+                <div className="w-full max-w-4xl bg-white shadow-lg rounded-lg p-6">
                     <h2 className="text-2xl font-semibold text-gray-800 mb-4">
                         Create a New Blog
                     </h2>
@@ -68,14 +74,16 @@ export const Publish = () => {
                         onChange={(e) => setTitle(e.target.value)}
                         value={title}
                         type="text"
-                        className="w-full p-3 text-lg border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:outline-none"
+                        className="w-full p-3 text-lg border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:outline-none mb-4"
                         placeholder="Enter Blog Title..."
                     />
 
-                    {/* RichTextEditor */}
-                    <div className="mt-4">
-                        <RichTextEditor value={description} onChange={setDescription} />
-                    </div>
+                    {/* Blog Editor */}
+                    <BlogEditor
+                        value={content}
+                        onChange={setContent}
+                        editorType="markdown"
+                    />
 
                     {/* Publish Button */}
                     <button
@@ -89,4 +97,4 @@ export const Publish = () => {
             </div>
         </div>
     );
-};
+};;
