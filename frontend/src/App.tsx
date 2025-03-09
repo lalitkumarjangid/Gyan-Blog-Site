@@ -8,6 +8,7 @@ import { Toaster } from 'react-hot-toast';
 import { ProtectedRoute } from "./hooks/ProtectedRoutes";
 import "./App.css"
 import { Home } from "./components/Home";
+import { AdminPanel } from "./pages/AdminPanel";
 
 function App() {
   return (
@@ -28,6 +29,7 @@ function App() {
           <Route path="/signup" element={<Signup />} />
           <Route path="/signin" element={<Signin />} />
           <Route path="/" element={<Home/>} />
+          <Route path="/admin" element={<AdminPanel />} />
           
           {/* Protected Routes */}
           <Route path="/blog/:id" element={
