@@ -1,5 +1,13 @@
+@import '@uiw/react-md-editor/markdown-editor.css';
+@import '@uiw/react-markdown-preview/markdown.css';
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
- 
+
+
+/* Dark mode support */
+[data-color-mode*='dark'],
+[data-color-mode*='dark'] body {
+  --color-canvas-default: #0d1117;
+}
