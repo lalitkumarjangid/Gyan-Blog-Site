@@ -154,40 +154,37 @@ blogRouter.get("/:id", async (c) => {
 });
 
 blogRouter.delete("/delete/:id", async (c) => {
-    const id = c.req.param("id");
-    const authHeader = c.req.header("authorization") || "";
-    
-    const prisma = new PrismaClient({
-      datasourceUrl: c.env.DATABASE_URL,
-    }).$extends(withAccelerate());
-  
-    try {
-    
-      const payload = await verify(authHeader, c.env.JWT_SECRET);
-      const isAdmin = payload.isAdmin || false;
-  
-      if (!isAdmin) {
-        c.status(403);
-        return c.json({
-          message: "You are not an admin. Only admins can delete blog posts.",
-        });
-      }
-  
-     
-      await prisma.blog.delete({
-        where: {
-          id: Number(id),
-        },
-      });
-  
+  const id = c.req.param("id");
+  const authHeader = c.req.header("authorization") || "";
+
+  const prisma = new PrismaClient({
+    datasourceUrl: c.env.DATABASE_URL,
+  }).$extends(withAccelerate());
+
+  try {
+    const payload = await verify(authHeader, c.env.JWT_SECRET);
+    const isAdmin = payload.isAdmin || false;
+
+    if (!isAdmin) {
+      c.status(403);
       return c.json({
-        message: "Blog deleted successfully by admin",
-      });
-  
-    } catch (e) {
-      c.status(500);
-      return c.json({
-        message: "Error while deleting blog post",
+        message: "You are not an admin. Only admins can delete blog posts.",
       });
     }
-  });
+
+    await prisma.blog.delete({
+      where: {
+        id: Number(id),
+      },
+    });
+
+    return c.json({
+      message: "Blog deleted successfully by admin",
+    });
+  } catch (e) {
+    c.status(500);
+    return c.json({
+      message: "Error while deleting blog post",
+    });
+  }
+});
