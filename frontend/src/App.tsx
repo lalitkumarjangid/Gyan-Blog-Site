@@ -9,6 +9,7 @@ import { ProtectedRoute } from "./hooks/ProtectedRoutes";
 import "./App.css"
 import { Home } from "./components/Home";
 import { AdminPanel } from "./pages/AdminPanel";
+import NotFound from "./pages/NotFound";
 
 function App() {
   return (
@@ -30,6 +31,7 @@ function App() {
           <Route path="/signin" element={<Signin />} />
           <Route path="/" element={<Home/>} />
           <Route path="/admin" element={<AdminPanel />} />
+          <Route path="*" element={<NotFound />} />
           
           {/* Protected Routes */}
           <Route path="/blog/:id" element={
