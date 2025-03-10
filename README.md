@@ -27,7 +27,6 @@ To get started with Gyan Blog, follow these steps:
 1. **Clone the repository**:
     ```bash
     git clone https://github.com/lalitkumarjangid/gyan-blog-site.git
-    cd client
     ```
 
 2. **Install dependencies**:
@@ -40,8 +39,13 @@ To get started with Gyan Blog, follow these steps:
 4. **Start the development server**:
     ```bash
     cd server
-    npm start
+    wrangler dev src/index.ts
     ```
+5.  **Start the Fronted**
+    ```bash
+    cd client
+    npm run dev
+    ``    
 
 ## Usage
 
@@ -52,3 +56,58 @@ Once the development server is running, you can access the blog at `http://local
 To build the project for production, run:
 ```bash
 npm run build
+```
+
+## Folder Structure
+
+```plaintext
+Gyan Blog/
+├── blog-backend/       # Backend application
+│   ├── .wrangler/      # Cloudflare Workers configuration
+│   ├── node_modules/   # Backend dependencies
+│   ├── prisma/         # Prisma database setup
+│   ├── src/            # Backend source code
+│   │   ├── routes/     # API routes
+│   │   │   ├── index.ts # Main backend routes file
+│   ├── .env            # Environment variables
+│   ├── package.json    # Backend dependencies and scripts
+│   ├── tsconfig.json   # TypeScript configuration
+│   ├── wrangler.toml   
+│
+├── common/             # Shared utilities and modules
+│   ├── dist/           # Compiled shared modules
+│   ├── src/            # Shared source code
+│   ├── package.json    # Dependencies for common utilities
+│
+├── frontend/           # Frontend application
+│   ├── dist/           # Compiled frontend code
+│   ├── node_modules/   # Frontend dependencies
+│   ├── public/         # Static assets
+│   ├── src/            # Frontend source code
+│   │   ├── assets/     # Static files like images and icons
+│   │   ├── components/ # Reusable UI components
+│   │   ├── hooks/      # Custom React hooks
+│   │   ├── lib/        # Utility functions and API logic
+│   │   ├── pages/      # Page-based routing (React.js style)
+│   ├── index.html      # Main HTML file
+│   ├── package.json    # Frontend dependencies and scripts
+│   ├── tailwind.config.js # Tailwind CSS configuration
+│   ├── vite.config.ts  # Vite configuration
+│   ├── tsconfig.json   # TypeScript configuration
+│
+├── README.md           # Project documentation
+```
+
+## Contributing
+
+Contributions are welcome! To contribute:
+
+1. Fork the repository.
+2. Create a new branch (`git checkout -b feature-branch`).
+3. Make your changes and commit them (`git commit -m 'Add new feature'`).
+4. Push to your branch (`git push origin feature-branch`).
+5. Create a Pull Request.
+
+## License
+
+This project is licensed under the MIT License. See the [LICENSE](LICENSE) file for details.
