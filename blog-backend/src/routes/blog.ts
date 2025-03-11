@@ -94,7 +94,6 @@ blogRouter.put("/", async (c) => {
   });
 });
 
-// Todo: add pagination
 blogRouter.get("/bulk", async (c) => {
   const prisma = new PrismaClient({
     datasourceUrl: c.env.DATABASE_URL,
@@ -104,13 +103,16 @@ blogRouter.get("/bulk", async (c) => {
       content: true,
       title: true,
       id: true,
-      publishedDate: true, // Add publishedDate to selection
+      publishedDate: true, 
       author: {
         select: {
           name: true,
         },
       },
     },
+    orderBy: {
+      publishedDate: 'desc' 
+    }
   });
 
   return c.json({
