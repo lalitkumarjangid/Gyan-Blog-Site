@@ -24,36 +24,31 @@ const formatDate = (dateString: string) => {
 export const Blogs = () => {
     const { loading, blogs } = useBlogs();
     const [visibleBlogs, setVisibleBlogs] = useState<any[]>([]);
-    const [loadedCount, setLoadedCount] = useState(5); // Load first 5 blogs
+    const [loadedCount, setLoadedCount] = useState(5);
     const [isFetching, setIsFetching] = useState(false);
     const observer = useRef<IntersectionObserver | null>(null);
 
-    // Sort blogs by latest published date (recent first)
-    const sortedBlogs = [...blogs].sort(
-        (a, b) => new Date(b.publishedDate).getTime() - new Date(a.publishedDate).getTime()
-    );
-
     // Load more blogs
     const loadMoreBlogs = useCallback(() => {
-        if (isFetching || loadedCount >= sortedBlogs.length) return;
+        if (isFetching || loadedCount >= blogs.length) return;
         setIsFetching(true);
         setTimeout(() => {
-            setLoadedCount((prev) => Math.min(prev + 5, sortedBlogs.length)); // Load 5 more blogs
+            setLoadedCount((prev) => Math.min(prev + 5, blogs.length));
             setIsFetching(false);
         }, 1000);
-    }, [sortedBlogs.length, isFetching, loadedCount]);
+    }, [blogs.length, isFetching, loadedCount]);
 
     // Load initial blogs when data is available
     useEffect(() => {
-        if (!loading && sortedBlogs.length > 0) {
-            setVisibleBlogs(sortedBlogs.slice(0, loadedCount));
+        if (!loading && blogs.length > 0) {
+            setVisibleBlogs(blogs.slice(0, loadedCount));
         }
-    }, [sortedBlogs, loading, loadedCount]);
+    }, [blogs, loading, loadedCount]);
 
     // Observe last blog for infinite scrolling
     const lastBlogRef = useCallback(
         (node: HTMLDivElement | null) => {
-            if (isFetching || loadedCount >= sortedBlogs.length) return;
+            if (isFetching || loadedCount >= blogs.length) return;
             if (observer.current) observer.current.disconnect();
 
             observer.current = new IntersectionObserver(
@@ -67,7 +62,7 @@ export const Blogs = () => {
 
             if (node) observer.current.observe(node);
         },
-        [loadMoreBlogs, isFetching, loadedCount, sortedBlogs.length]
+        [loadMoreBlogs, isFetching, loadedCount, blogs.length]
     );
 
     if (loading) {
@@ -126,7 +121,7 @@ export const Blogs = () => {
                     )}
 
                     {/* Show "No more blogs" message when all blogs are loaded */}
-                    {!isFetching && loadedCount >= sortedBlogs.length && (
+                    {!isFetching && loadedCount >= blogs.length && (
                         <div className="text-center text-gray-500 mt-6">
                             🎉 You have reached the end! No more blogs to load.
                         </div>
