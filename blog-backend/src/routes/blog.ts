@@ -138,6 +138,7 @@ blogRouter.get("/:id", async (c) => {
         publishedDate: true, // Add publishedDate to selection
         author: {
           select: {
+            id: true,
             name: true,
           },
         },
@@ -154,6 +155,65 @@ blogRouter.get("/:id", async (c) => {
     });
   }
 });
+blogRouter.get("/author/:authorId", async (c) => {
+  const authorId = c.req.param("authorId");
+  const prisma = new PrismaClient({
+    datasourceUrl: c.env.DATABASE_URL,
+  }).$extends(withAccelerate());
+
+  try {
+    const authorWithBlogs = await prisma.user.findUnique({
+      where: {
+        id: Number(authorId)
+      },
+      select: {
+        id: true,
+        name: true,
+        blogs: {
+          select: {
+            id: true,
+            title: true,
+            content: true,
+            publishedDate: true,
+          },
+          orderBy: {
+            publishedDate: 'desc'
+          },
+          take: 5  // Get only the 5 most recent blogs
+        },
+        _count: {
+          select: {
+            blogs: true
+          }
+        }
+      }
+    });
+
+    if (!authorWithBlogs) {
+      c.status(404);
+      return c.json({
+        message: "Author not found"
+      });
+    }
+
+    return c.json({
+      author: {
+        id: authorWithBlogs.id,
+        name: authorWithBlogs.name,
+        totalBlogs: authorWithBlogs._count.blogs,
+        recentBlogs: authorWithBlogs.blogs
+      }
+    });
+
+  } catch (e) {
+    c.status(500);
+    return c.json({
+      message: "Error while fetching author details"
+    });
+  }
+});
+
+// Admin Api's below
 
 blogRouter.delete("/delete/:id", async (c) => {
   const id = c.req.param("id");
@@ -187,6 +247,148 @@ blogRouter.delete("/delete/:id", async (c) => {
     c.status(500);
     return c.json({
       message: "Error while deleting blog post",
+    });
+  }
+});
+
+blogRouter.get("/admin/data", async (c) => {
+  const authHeader = c.req.header("authorization") || "";
+  const prisma = new PrismaClient({
+    datasourceUrl: c.env.DATABASE_URL,
+  }).$extends(withAccelerate());
+
+  try {
+    const payload = await verify(authHeader, c.env.JWT_SECRET);
+    const isAdmin = payload.isAdmin || false;
+
+    if (!isAdmin) {
+      c.status(403);
+      return c.json({
+        message: "Only admins can access this data",
+      });
+    }
+
+    const data = await prisma.user.findMany({
+      include: {
+        blogs: {
+          select: {
+            id: true,
+            title: true,
+            content: true,
+            published: true,
+            publishedDate: true,
+          },
+          orderBy: {
+            publishedDate: 'desc'
+          }
+        },
+        _count: {
+          select: {
+            blogs: true
+          }
+        }
+      }
+    });
+
+    const formattedData = data.map(user => ({
+      id: user.id,
+      name: user.name,
+      username: user.username,
+      totalBlogs: user._count.blogs,
+      blogs: user.blogs
+    }));
+
+    return c.json({
+      users: formattedData
+    });
+
+  } catch (e) {
+    c.status(500);
+    return c.json({
+      message: "Error while fetching data"
+    });
+  }
+});
+
+blogRouter.get("/admin/search", async (c) => {
+  const query = c.req.query("query");
+  const authHeader = c.req.header("authorization") || "";
+  
+  const prisma = new PrismaClient({
+    datasourceUrl: c.env.DATABASE_URL,
+  }).$extends(withAccelerate());
+
+  try {
+    const payload = await verify(authHeader, c.env.JWT_SECRET);
+    const isAdmin = payload.isAdmin || false;
+
+    if (!isAdmin) {
+      c.status(403);
+      return c.json({
+        message: "Only admins can access this data",
+      });
+    }
+
+    const searchConditions: any[] = [];
+
+    // Add numeric search if query is a number
+    if (query && !isNaN(Number(query))) {
+      searchConditions.push(
+        { id: Number(query) },
+        { blogs: { some: { id: Number(query) } } }
+      );
+    }
+
+    // Add text search conditions
+    if (query) {
+      searchConditions.push(
+        {
+          username: {
+            contains: query,
+            mode: 'insensitive' as const
+          }
+        },
+        {
+          name: {
+            contains: query,
+            mode: 'insensitive' as const
+          }
+        }
+      );
+    }
+
+    const users = await prisma.user.findMany({
+      where: {
+        OR: searchConditions.length > 0 ? searchConditions : undefined
+      },
+      include: {
+        blogs: {
+          orderBy: {
+            publishedDate: 'desc'
+          }
+        },
+        _count: {
+          select: {
+            blogs: true
+          }
+        }
+      }
+    });
+
+    return c.json({
+      users: users.map(user => ({
+        id: user.id,
+        name: user.name,
+        username: user.username,
+        totalBlogs: user._count.blogs,
+        blogs: user.blogs
+      }))
+    });
+
+  } catch (e) {
+    c.status(500);
+    return c.json({
+      message: "Error while searching"
     });
   }
 });
