@@ -22,20 +22,19 @@ export const FullBlog = ({ blog }: { blog: Blog }) => {
   const [isLoading, setIsLoading] = useState(true);
 
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
-  // First, add token state at the component level
+
   const [token] = useState<string>(localStorage.getItem("token") || "");
 
-  // Then update the useEffect hook
   useEffect(() => {
     const fetchAuthorBlogs = async () => {
       if (!blog.author?.id) {
-        console.log("No author ID available");
+        // console.log("No author ID available");
         return;
       }
 
       try {
         setIsLoading(true);
-        console.log("Fetching blogs for author:", blog.author.id);
+        // console.log("Fetching blogs for author:", blog.author.id);
 
         const response = await axios.get(
           `${BACKEND_URL}/api/v1/blog/author/${blog.author.id}?limit=6`,
@@ -47,7 +46,7 @@ export const FullBlog = ({ blog }: { blog: Blog }) => {
           }
         );
 
-        console.log("Backend response:", response.data);
+        // console.log("Backend response:", response.data);
 
         const recentBlogs = response.data.author.recentBlogs
           .filter(
@@ -55,14 +54,13 @@ export const FullBlog = ({ blog }: { blog: Blog }) => {
           )
           .slice(0, 6);
 
-        console.log("Filtered blogs:", recentBlogs);
+        // console.log("Filtered blogs:", recentBlogs);
         setAuthorBlogs(recentBlogs);
       } catch (error) {
-        console.error("Failed to fetch author blogs:", error);
-        // Handle unauthorized error
+        // console.error("Failed to fetch author blogs:", error);
+
         if (axios.isAxiosError(error) && error.response?.status === 401) {
-          console.log("Unauthorized access, redirecting to login...");
-          // You might want to handle unauthorized access here
+          // console.log("Unauthorized access, redirecting to login...");
         }
       } finally {
         setIsLoading(false);
@@ -175,6 +173,21 @@ export const FullBlog = ({ blog }: { blog: Blog }) => {
 
               {/* Blog Content */}
               <div className="pt-6 md:pt-8 prose dark:prose-invert max-w-none markdown-content">
+                <div className="text-gray-500 pt-3 flex flex-wrap items-center gap-2">
+                  <div className="flex items-center gap-1">
+                    <span className="text-lg">📅</span>
+                    <span>{formatDate(blog.publishedDate)}</span>
+                  </div>
+                  {readingTime() && (
+                    <>
+                      <span className="text-gray-300">•</span>
+                      <div className="flex items-center gap-1">
+                        <span className="text-lg">⏳</span>
+                        <span>{readingTime()}</span>
+                      </div>
+                    </>
+                  )}
+                </div>
                 <ReactMarkdown
                   remarkPlugins={[remarkGfm]}
                   rehypePlugins={[
