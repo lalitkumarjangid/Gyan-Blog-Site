@@ -173,7 +173,7 @@ export const FullBlog = ({ blog }: { blog: Blog }) => {
 
               {/* Blog Content */}
               <div className="pt-6 md:pt-8 prose dark:prose-invert max-w-none markdown-content">
-                <div className="text-gray-500 pt-3 flex flex-wrap items-center gap-2">
+                <div className="hidden md:flex text-gray-500 pt-3  flex-wrap items-center gap-2">
                   <div className="flex items-center gap-1">
                     <span className="text-lg">📅</span>
                     <span>{formatDate(blog.publishedDate)}</span>
