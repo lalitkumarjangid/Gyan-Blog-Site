@@ -3,6 +3,7 @@ import { Appbar } from "../components/Appbar";
 import { BlogCard } from "../components/BlogCard";
 import { BlogSkeleton } from "../components/BlogSkeleton";
 import { useBlogs } from "../hooks";
+import { useSearch } from "../components/Search";
 
 const formatDate = (dateString: string) => {
     try {
@@ -27,23 +28,33 @@ export const Blogs = () => {
     const [loadedCount, setLoadedCount] = useState(5);
     const [isFetching, setIsFetching] = useState(false);
     const observer = useRef<IntersectionObserver | null>(null);
+    const { searchTerm } = useSearch();
 
+    const filteredBlogs = blogs.filter((blog) =>
+        blog.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        blog.content.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        (blog.author?.name || "").toLowerCase().includes(searchTerm.toLowerCase())
+    );
     // Load more blogs
-    const loadMoreBlogs = useCallback(() => {
-        if (isFetching || loadedCount >= blogs.length) return;
+     const loadMoreBlogs = useCallback(() => {
+        if (isFetching || loadedCount >= filteredBlogs.length) return;
         setIsFetching(true);
         setTimeout(() => {
-            setLoadedCount((prev) => Math.min(prev + 5, blogs.length));
+            setLoadedCount((prev) => Math.min(prev + 5, filteredBlogs.length));
             setIsFetching(false);
         }, 1000);
-    }, [blogs.length, isFetching, loadedCount]);
+    }, [filteredBlogs.length, isFetching, loadedCount])
 
     // Load initial blogs when data is available
     useEffect(() => {
-        if (!loading && blogs.length > 0) {
-            setVisibleBlogs(blogs.slice(0, loadedCount));
+        if (!loading && filteredBlogs.length > 0) {
+            setVisibleBlogs(filteredBlogs.slice(0, loadedCount));
         }
-    }, [blogs, loading, loadedCount]);
+    }, [filteredBlogs, loading, loadedCount]);
+
+    useEffect(() => {
+        setLoadedCount(5);
+    }, [searchTerm]);
 
     // Observe last blog for infinite scrolling
     const lastBlogRef = useCallback(
