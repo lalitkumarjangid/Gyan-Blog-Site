@@ -10,10 +10,11 @@ import "./App.css"
 import { Home } from "./components/Home";
 import { AdminPanel } from "./pages/AdminPanel";
 import NotFound from "./pages/NotFound";
+import { SearchProvider } from "./components/Search"
 
 function App() {
   return (
-    <>
+     <SearchProvider>
       <Toaster
         position="top-center"
         reverseOrder={false}
@@ -51,7 +52,7 @@ function App() {
           } />
         </Routes>
       </BrowserRouter>
-    </>
+      </SearchProvider>
   );
 }
 
