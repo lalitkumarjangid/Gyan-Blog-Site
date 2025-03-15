@@ -112,11 +112,11 @@ export const FullBlog = ({ blog }: { blog: Blog }) => {
                     {blog.author?.name || "N/A"}
                   </span>
                   <div className="text-sm text-gray-500 flex items-center gap-2 mt-1">
-                    <span>{formatDate(blog.publishedDate)}</span>
+                    <span>📅{formatDate(blog.publishedDate)}</span>
                     {readingTime() && (
                       <>
                         <span>•</span>
-                        <span>{readingTime()}</span>
+                        <span>⏱️{readingTime()}</span>
                       </>
                     )}
                   </div>
@@ -133,7 +133,7 @@ export const FullBlog = ({ blog }: { blog: Blog }) => {
                     {blog.author?.name || "N/A"}
                   </span>
                   <div className="text-sm text-gray-500 mt-1">
-                    Published on {formatDate(blog.publishedDate)}
+                    Published on 📅{formatDate(blog.publishedDate)}
                   </div>
                 </div>
               </div>
@@ -303,7 +303,7 @@ export const FullBlog = ({ blog }: { blog: Blog }) => {
                               {authorBlog.title}
                             </h3>
                             <time className="text-sm text-gray-500 mt-1 block">
-                              {formatDate(authorBlog.publishedDate)}
+                              📅{formatDate(authorBlog.publishedDate)}
                             </time>
                           </article>
                         </Link>
