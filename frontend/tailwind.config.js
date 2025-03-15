@@ -5,7 +5,6 @@ const {
 /** @type {import('tailwindcss').Config} */
 module.exports = {
   content: [
-    // your paths
     "./src/**/*.{ts,tsx}",
   ],
   darkMode: "class",
@@ -13,6 +12,9 @@ module.exports = {
     extend: {
       animation: {
         aurora: "aurora 60s linear infinite",
+      },
+      scale: {
+        '102': '1.02',
       },
       keyframes: {
         aurora: {
