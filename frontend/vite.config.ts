@@ -15,10 +15,5 @@ export default defineConfig({
     headers: {
       'Content-Security-Policy': "script-src 'self' 'unsafe-eval' 'unsafe-inline';"
     }
-  },
-  build: {
-    rollupOptions: {
-      external: ['zwitch']
-    }
   }
 });
