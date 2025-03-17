@@ -34,7 +34,8 @@
     "rehype-sanitize": "^6.0.0",
     "remark-gfm": "^4.0.1",
     "tailwind-merge": "^2.3.0",
-    "turndown": "^7.2.0"
+    "turndown": "^7.2.0",
+    "zwitch": "^2.0.4"
   },
   "devDependencies": {
     "@types/react": "^18.2.56",
