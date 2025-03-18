@@ -46,19 +46,22 @@ export const Publish = () => {
       navigate(`/blog/${response.data.id}`);
     } catch (error) {
       if (axios.isAxiosError(error)) {
-        const message =
-          error.response?.status === 401
-            ? "Please login again to publish"
-            : "Failed to publish blog";
-        toast.error(message);
-        if (error.response?.status === 401) {
+        const message = error.response?.data?.message || "Failed to publish blog";
+        if (message === "Post contains inappropriate language. Your account has been blocked.") {
+          toast.error(message);
+          localStorage.removeItem("token"); 
+          navigate("/signin"); 
+        } else if (error.response?.status === 401) {
+          toast.error("Please login again to publish");
           navigate("/signin");
+        } else {
+          toast.error(message); 
         }
       } else {
         toast.error("Something went wrong");
       }
     } finally {
-      setIsLoading(false);
+      setIsLoading(false); 
     }
   };
 
