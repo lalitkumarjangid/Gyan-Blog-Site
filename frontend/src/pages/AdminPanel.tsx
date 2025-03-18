@@ -19,6 +19,7 @@ interface User {
   name: string;
   username: string;
   isAdmin: boolean;
+  isBlocked: boolean; 
   totalBlogs: number;
   blogs: UserBlog[];
 }
@@ -123,6 +124,24 @@ export const AdminPanel = () => {
   const handleBlogClick = (blogId: number) => {
     navigate(`/blog/${blogId}`);
   };
+  
+  const handleUnblockUser = async (userId: number) => {
+    try {
+      await axios.post(
+        `${BACKEND_URL}/api/v1/blog/admin/unblock/${userId}`,
+        {},
+        {
+          headers: {
+            Authorization: localStorage.getItem("token"),
+          },
+        }
+      );
+      toast.success("User unblocked successfully");
+      fetchUsers(searchQuery); // Refresh the user list
+    } catch (error: any) {
+      toast.error(error.response?.data?.message || "Error unblocking user");
+    }
+  };
 
   const renderUserCard = (user: User) => (
     <div
@@ -154,7 +173,16 @@ export const AdminPanel = () => {
           </div>
         </div>
       </div>
-
+  
+      {user.isBlocked && (
+        <button
+          onClick={() => handleUnblockUser(user.id)}
+          className="bg-red-500 text-white px-4 py-2 rounded hover:bg-red-600 transition-colors mb-4"
+        >
+          Unblock User
+        </button>
+      )}
+  
       {user.blogs.map((blog) => (
         <div
           key={blog.id}
@@ -173,10 +201,7 @@ export const AdminPanel = () => {
           <div className="flex items-center gap-3">
             <span
               className={`px-2 py-1 rounded text-sm ${
-                blog.published
-               ? "bg-yellow-100 text-yellow-800"
-                  : "bg-green-100 text-green-800"
-                  
+                blog.published ? "bg-yellow-100 text-yellow-800" : "bg-green-100 text-green-800"
               }`}
             >
               {blog.published ? "Draft" : "Published"}
@@ -207,6 +232,7 @@ export const AdminPanel = () => {
       ))}
     </div>
   );
+  
 
   return (
     <div className="min-h-screen bg-gray-100 py-8">
