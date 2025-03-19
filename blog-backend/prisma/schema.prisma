@@ -12,6 +12,7 @@ model User {
   name     String?
   username String  @unique
   password String
+  isBlocked    Boolean  @default(false)
   blogs    Blog[]
 }
 
